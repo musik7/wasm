@@ -18,12 +18,10 @@ jobs:
         run: git clone --depth 1 https://github.com/tree-sitter/tree-sitter
 
       - name: Build Core WASM
-        working-directory: tree-sitter/lib
         run: |
-          emcc src/*.c \
-            -I include \  # biar nemu folder tree_sitter/
-            -I src \
-            -o tree-sitter.js \
+          emcc tree-sitter/lib/src/*.c \
+            -I tree-sitter/lib/include \
+            -o tree-sitter/lib/tree-sitter.js \
             -s WASM=1 \
             -s MODULARIZE=1 \
             -s EXPORT_NAME='TreeSitter' \
