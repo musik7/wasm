@@ -1,0 +1,38 @@
+name: Build Tree-sitter Core WASM
+
+on:
+  workflow_dispatch:  # biar bisa pencet tombol Run manual
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v12
+        with:
+          version: 3.1.45
+
+      - name: Clone Tree-sitter
+        run: git clone --depth 1 https://github.com/tree-sitter/tree-sitter
+
+      - name: Build Core WASM
+        run: |
+          cd tree-sitter/lib
+          emcc src/*.c -I src -o tree-sitter.js \
+            -s WASM=1 \
+            -s MODULARIZE=1 \
+            -s EXPORT_NAME='TreeSitter' \
+            -s EXPORTED_FUNCTIONS='["_ts_parser_new","_ts_parser_delete","_ts_parser_set_language","_ts_parser_parse_string","_ts_tree_root_node","_ts_node_type","_ts_node_child_count","_ts_node_child","_ts_node_start_byte","_ts_node_end_byte","_free","_malloc"]' \
+            -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap","UTF8ToString"]' \
+            -O3
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tree-sitter-core
+          path: |
+            tree-sitter/lib/tree-sitter.js
+            tree-sitter/lib/tree-sitter.wasm
