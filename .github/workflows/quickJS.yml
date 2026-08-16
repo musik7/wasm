@@ -1,28 +1,30 @@
-name: Build QuickJS WASM
+name: Build WASM
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
+  wasm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          repository: bellard/quickjs
 
       - uses: mymindstorm/setup-emsdk@v13
         with:
           version: 3.1.64
 
-      - name: Build with Make
+      - name: Generate Unicode
         run: |
-          make clean
-          make qjs.wasm
+          bash unicode_download.sh
+          gcc unicode_gen.c -o unicode_gen
+          ./unicode_gen
+
+      - name: Build WASM only
+        run: bash release.sh quickjs
 
       - uses: actions/upload-artifact@v4
         with:
           name: quickjs-wasm
           path: |
-            qjs.js
-            qjs.wasm
+            - qjs.js
+            - qjs.wasm
