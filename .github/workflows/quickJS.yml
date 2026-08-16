@@ -22,7 +22,7 @@ jobs:
           wget https://raw.githubusercontent.com/bellard/quickjs/master/cutils.c
           bash unicode_download.sh
           gcc unicode_gen.c cutils.c -o unicode_gen
-          ./unicode_gen
+          ./unicode_gen unicode
 
       - name: Build WASM only
         run: bash release.sh quickjs
