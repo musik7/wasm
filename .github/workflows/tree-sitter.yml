@@ -21,8 +21,8 @@ jobs:
         working-directory: tree-sitter/lib
         run: |
           emcc src/*.c \
-            -I include \
-            -iquote include \  # INI KUNCINYA
+            -I include \  # biar nemu folder tree_sitter/
+            -I src \
             -o tree-sitter.js \
             -s WASM=1 \
             -s MODULARIZE=1 \
