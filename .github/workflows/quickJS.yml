@@ -18,8 +18,16 @@ jobs:
       - name: Download unicode data
         run: bash unicode_download.sh
 
-      - name: Build with release.sh
-        run: sed -i '/cp tests/d' release.sh && bash release.sh
+      - name: Build qjs.js + qjs.wasm
+        run: |
+          emcc -O2 \
+            qjs.c quickjs.c libregexp.c libunicode.c cutils.c \
+            unicode/*.c \
+            -o qjs.js \
+            -s WASM=1 \
+            -s MODULARIZE=1 \
+            -s EXPORT_NAME=QuickJSModule \
+            -s ALLOW_MEMORY_GROWTH=1
 
       - uses: actions/upload-artifact@v4
         with:
