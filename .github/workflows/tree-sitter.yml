@@ -17,11 +17,13 @@ jobs:
       - name: Clone tree-sitter
         run: git clone --depth 1 https://github.com/tree-sitter/tree-sitter
 
+      - name: Copy headers
+        run: cp -r tree-sitter/lib/include/* tree-sitter/lib/src/
+
       - name: Build Core WASM
-        working-directory: tree-sitter/lib  # penting: cd ke lib dulu
+        working-directory: tree-sitter/lib
         run: |
           emcc src/*.c \
-            -I ../include \  # ini biar nemu tree_sitter/api.h
             -I src \
             -o tree-sitter.js \
             -s WASM=1 \
