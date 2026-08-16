@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Emscripten
+      - name: Setup Emscripten 3.1.60
         uses: mymindstorm/setup-emsdk@v12
         with:
           version: 3.1.60
@@ -27,7 +27,7 @@ jobs:
             -s WASM=1 \
             -s MODULARIZE=1 \
             -s EXPORT_NAME='TreeSitter' \
-            -s EXPORTED_FUNCTIONS='["_ts_parser_new","_ts_parser_delete","_ts_parser_set_language","_ts_parser_parse_string","_ts_tree_root_node","_ts_node_type","_ts_node_child_count","_ts_node_child","_ts_node_start_byte","_ts_node_end_byte","_free","_malloc"]' \
+            -s EXPORTED_FUNCTIONS='["_ts_parser_new","_ts_parser_delete","_ts_parser_set_language","_ts_parser_parse_string","_ts_tree_root_node","_ts_node_type","_ts_node_child_count","_ts_node_child","_ts_node_start_byte","_ts_node_end_byte","_ts_tree_delete","_free","_malloc"]' \
             -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap","UTF8ToString"]' \
             -O3
 
@@ -35,4 +35,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tree-sitter-core-wasm
-          path: tree-sitter.js
+          path: 
+            - tree-sitter.js
+            - tree-sitter.wasm
