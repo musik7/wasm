@@ -1,23 +1,53 @@
-name: Download Web Tree-sitter
-
 on:
   workflow_dispatch:
 
 jobs:
-  download:
+  build:
     runs-on: ubuntu-24.04
-    steps:
-      - name: Download + Extract
-        run: |
-          curl -L https://github.com/tree-sitter/tree-sitter/releases/latest/download/web-tree-sitter.tar.gz -o web.tar.gz
-          tar -xzf web.tar.gz
-          ls -la  # <-- buat liat file apa aja yg keluar
+    strategy:
+      fail-fast: false
+      matrix:
+        grammar: 
+          - tree-sitter-javascript
+          - tree-sitter-typescript
+          - tree-sitter-embedded-template
+          - tree-sitter-python
+          - tree-sitter-go
+          - tree-sitter-rust
+          - tree-sitter-c
+          - tree-sitter-cpp
+          - tree-sitter-java
+          - tree-sitter-c-sharp
+          - tree-sitter-php
+          - tree-sitter-ruby
+          - tree-sitter-swift
+          - kotlin-tree-sitter
+          - tree-sitter-json
+          - tree-sitter-yaml
+          - tree-sitter-html
+          - tree-sitter-css
+          - tree-sitter-bash
+          - tree-sitter-sql
 
-      - name: Upload Artifact
+    steps:
+      - name: Checkout ${{ matrix.grammar }}
+        uses: actions/checkout@v4
+        with:
+          repository: tree-sitter/${{ matrix.grammar }}
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v12
+        with:
+          version: 3.1.60
+
+      - name: Build WASM with CMake
+        run: |
+          emcmake cmake -B build -DCMAKE_BUILD_TYPE=Release
+          emmake cmake --build build --config Release
+          
+      - name: Rename and Upload
         uses: actions/upload-artifact@v4
         with:
-          name: tree-sitter-core-wasm
-          path: 
-            tree-sitter.wasm
-            tree-sitter.js
-          if-no-files-found: error  # biar langsung fail kalau ga ada
+          name: ${{ matrix.grammar }}.wasm
+          path: build/${{ matrix.grammar }}.wasm
+          if-no-files-found: error
