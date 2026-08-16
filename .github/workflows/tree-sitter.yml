@@ -18,11 +18,12 @@ jobs:
         run: git clone --depth 1 https://github.com/tree-sitter/tree-sitter
 
       - name: Build Core WASM
+        working-directory: tree-sitter/lib  # MASUK DULU KE SINI
         run: |
-          emcc tree-sitter/lib/src/*.c \
-            -I tree-sitter/lib/include \
-            -DTREE_SITTER_DISABLE_UNICODE \  # INI KUNCINYA
-            -o tree-sitter/lib/tree-sitter.js \
+          emcc src/*.c \
+            -I include \
+            -DTREE_SITTER_DISABLE_UNICODE \
+            -o tree-sitter.js \
             -s WASM=1 \
             -s MODULARIZE=1 \
             -s EXPORT_NAME='TreeSitter' \
