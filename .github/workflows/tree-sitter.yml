@@ -1,19 +1,19 @@
-name: Build Tree-sitter Core WASM
+name: Build Tree-sitter Core WASM 2026
 
 on:
-  workflow_dispatch:  # biar bisa pencet tombol Run manual
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-core:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Emscripten
+      - name: Setup Emscripten 3.1.60
         uses: mymindstorm/setup-emsdk@v12
         with:
-          version: 3.1.45
+          version: 3.1.60
 
       - name: Clone Tree-sitter
         run: git clone --depth 1 https://github.com/tree-sitter/tree-sitter
@@ -21,7 +21,10 @@ jobs:
       - name: Build Core WASM
         run: |
           cd tree-sitter/lib
-          emcc src/*.c -I src -o tree-sitter.js \
+          emcc src/*.c \
+            -I src \
+            -I include \  # INI YG KURANG TADI
+            -o tree-sitter.js \
             -s WASM=1 \
             -s MODULARIZE=1 \
             -s EXPORT_NAME='TreeSitter' \
@@ -32,7 +35,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: tree-sitter-core
+          name: tree-sitter-core-2026
           path: |
             tree-sitter/lib/tree-sitter.js
             tree-sitter/lib/tree-sitter.wasm
