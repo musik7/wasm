@@ -20,7 +20,7 @@ jobs:
       - name: Build Core WASM
         working-directory: tree-sitter/lib
         run: |
-          emcc src/*.c \
+          emcc src/alloc.c src/lexer.c src/node.c src/parser.c src/query.c src/stack.c src/subtree.c src/tree.c src/tree_cursor.c \
             -I include \
             -I src \
             -DTREE_SITTER_DISABLE_UNICODE \
