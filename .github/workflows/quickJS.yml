@@ -16,19 +16,16 @@ jobs:
           version: 3.1.64
 
       - name: Download unicode data
-        run: |
-          bash unicode_download.sh # <-- ini yg kurang
+        run: bash unicode_download.sh
 
       - name: Build with release.sh
         run: |
+          sed -i '/cp tests/d' release.sh  # fix error tests
           bash release.sh
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: quickjs-wasm
           path: |
             qjs.js
             qjs.wasm
-            qjsc.js
-            qjsc.wasm
