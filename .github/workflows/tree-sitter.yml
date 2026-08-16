@@ -13,6 +13,7 @@ jobs:
         uses: mymindstorm/setup-emsdk@v12
         with:
           version: 3.1.60
+          actions-cache-folder: 'emsdk-cache' # biar cache nya kita kontrol
 
       - name: Clone tree-sitter
         run: git clone --depth 1 https://github.com/tree-sitter/tree-sitter
@@ -20,16 +21,18 @@ jobs:
       - name: Build Core WASM
         working-directory: tree-sitter/lib
         run: |
-          emcc src/alloc.c src/lexer.c src/node.c src/parser.c src/query.c src/stack.c src/subtree.c src/tree.c src/tree_cursor.c \
-            -I include \
-            -I src \
+          mkdir -p build
+          emcc \
+            src/alloc.c src/lexer.c src/node.c src/parser.c src/query.c \
+            src/stack.c src/subtree.c src/tree.c src/tree_cursor.c \
+            -I include -I src \
             -DTREE_SITTER_DISABLE_UNICODE \
-            -o tree-sitter.js \
-            -s WASM=1 \
-            -s MODULARIZE=1 \
+            -o build/tree-sitter.js \
+            -s WASM=1 -s MODULARIZE=1 \
             -s EXPORT_NAME=TreeSitter \
-            -s EXPORTED_FUNCTIONS='["_ts_parser_new","_ts_parser_delete","_ts_parser_set_language","_ts_parser_parse_string","_ts_tree_root_node","_ts_node_type","_ts_node_child_count","_ts_node_child","_ts_node_start_byte","_ts_node_end_byte","_ts_tree_delete","_free","_malloc"]' \
-            -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap","UTF8ToString"]' \
+            -s STRICT=1 \
+            -s "EXPORTED_FUNCTIONS=['_ts_parser_new','_ts_parser_delete','_ts_parser_set_language','_ts_parser_parse_string','_ts_tree_root_node','_ts_node_type','_ts_node_child_count','_ts_node_child','_ts_node_start_byte','_ts_node_end_byte','_ts_tree_delete','_free','_malloc']" \
+            -s "EXPORTED_RUNTIME_METHODS=['ccall','cwrap','UTF8ToString']" \
             -O3
 
       - name: Upload Artifact
@@ -37,5 +40,5 @@ jobs:
         with:
           name: tree-sitter-core-wasm
           path: |
-            tree-sitter.js
-            tree-sitter.wasm
+            tree-sitter/lib/build/tree-sitter.js
+            tree-sitter/lib/build/tree-sitter.wasm
