@@ -1,40 +1,21 @@
-name: Build Tree-sitter Core WASM
+name: Download Web Tree-sitter
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
+  download:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout tree-sitter repo
-        uses: actions/checkout@v4
-        with:
-          repository: tree-sitter/tree-sitter
-          path: tree-sitter
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Setup Emscripten 3.1.60
-        uses: mymindstorm/setup-emsdk@v12
-        with:
-          version: 3.1.60
-
-      - name: Install deps
-        working-directory: tree-sitter
-        run: npm install
-
-      - name: Build WASM
-        working-directory: tree-sitter
-        run: npm run build-wasm
+      - name: Download web-tree-sitter
+        run: |
+          curl -L https://github.com/tree-sitter/tree-sitter/releases/latest/download/web-tree-sitter.tar.gz -o web.tar.gz
+          tar -xzf web.tar.gz
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: tree-sitter-core-wasm
           path: 
-            tree-sitter/tree-sitter.js
-            tree-sitter/tree-sitter.wasm
+            tree-sitter.wasm
+            tree-sitter.js
