@@ -19,9 +19,7 @@ jobs:
         run: bash unicode_download.sh
 
       - name: Build with release.sh
-        run: |
-          sed -i '/cp tests/d' release.sh  # fix error tests
-          bash release.sh
+        run: sed -i '/cp tests/d' release.sh && bash release.sh
 
       - uses: actions/upload-artifact@v4
         with:
