@@ -1,0 +1,27 @@
+name: Build QuickJS WASM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: bellard/quickjs
+
+      - uses: mymindstorm/setup-emsdk@v13
+        with:
+          version: 3.1.64
+
+      - name: Run release.sh
+        run: |
+          bash release.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quickjs-wasm
+          path: |
+            qjs.js
+            qjs.wasm
