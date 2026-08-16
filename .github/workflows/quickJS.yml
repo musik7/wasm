@@ -15,19 +15,10 @@ jobs:
         with:
           version: 3.1.64
 
-      - name: Download unicode data
-        run: bash unicode_download.sh
-
-      - name: Build qjs.js + qjs.wasm
+      - name: Build with Make
         run: |
-          emcc -O2 \
-            qjs.c quickjs.c libregexp.c libunicode.c cutils.c \
-            unicode/*.c \
-            -o qjs.js \
-            -s WASM=1 \
-            -s MODULARIZE=1 \
-            -s EXPORT_NAME=QuickJSModule \
-            -s ALLOW_MEMORY_GROWTH=1
+          make clean
+          make qjs.wasm
 
       - uses: actions/upload-artifact@v4
         with:
