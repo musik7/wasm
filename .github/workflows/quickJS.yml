@@ -17,8 +17,11 @@ jobs:
         run: |
           wget https://raw.githubusercontent.com/bellard/quickjs/master/unicode_download.sh
           wget https://raw.githubusercontent.com/bellard/quickjs/master/unicode_gen.c
+          wget https://raw.githubusercontent.com/bellard/quickjs/master/unicode_gen_def.h
+          wget https://raw.githubusercontent.com/bellard/quickjs/master/cutils.h
+          wget https://raw.githubusercontent.com/bellard/quickjs/master/cutils.c
           bash unicode_download.sh
-          gcc unicode_gen.c -o unicode_gen
+          gcc unicode_gen.c cutils.c -o unicode_gen
           ./unicode_gen
 
       - name: Build WASM only
