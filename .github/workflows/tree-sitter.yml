@@ -1,5 +1,4 @@
 name: Build Tree-sitter Core WASM
-name: Build Tree-sitter Core WASM
 
 on:
   workflow_dispatch:
