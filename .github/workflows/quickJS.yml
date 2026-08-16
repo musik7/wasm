@@ -15,13 +15,20 @@ jobs:
         with:
           version: 3.1.64
 
-      - name: Run release.sh
+      - name: Download unicode data
+        run: |
+          bash unicode_download.sh # <-- ini yg kurang
+
+      - name: Build with release.sh
         run: |
           bash release.sh
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: quickjs-wasm
           path: |
             qjs.js
             qjs.wasm
+            qjsc.js
+            qjsc.wasm
