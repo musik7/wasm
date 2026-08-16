@@ -21,7 +21,7 @@ jobs:
         working-directory: tree-sitter/lib  # penting: cd ke lib dulu
         run: |
           emcc src/*.c \
-            -I include \  # ini biar nemu tree_sitter/api.h
+            -I ../include \  # ini biar nemu tree_sitter/api.h
             -I src \
             -o tree-sitter.js \
             -s WASM=1 \
