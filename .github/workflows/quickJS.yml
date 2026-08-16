@@ -13,8 +13,10 @@ jobs:
         with:
           version: 3.1.64
 
-      - name: Generate Unicode
+      - name: Download + Generate Unicode
         run: |
+          wget https://raw.githubusercontent.com/bellard/quickjs/master/unicode_download.sh
+          wget https://raw.githubusercontent.com/bellard/quickjs/master/unicode_gen.c
           bash unicode_download.sh
           gcc unicode_gen.c -o unicode_gen
           ./unicode_gen
