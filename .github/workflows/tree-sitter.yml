@@ -22,6 +22,7 @@ jobs:
         run: |
           emcc src/*.c \
             -I include \
+            -I src \
             -DTREE_SITTER_DISABLE_UNICODE \
             -o tree-sitter.js \
             -s WASM=1 \
